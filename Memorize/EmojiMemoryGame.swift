@@ -9,14 +9,14 @@
 import Foundation
 
 class EmojiMemoryGame: ObservableObject {
-    @Published private var model = EmojiMemoryGame.createMemoryGame()
+    @Published private var model: MemoryGame<String>
 
-    static func createMemoryGame() -> MemoryGame<String> {
-        let emoji = ["👻", "😆", "👾", "🌯", "🍑"]
-        return MemoryGame<String>(
-            numberOfPairsOfCards: 2,
-            cardContentFactory: { idx in emoji[idx] }
-        )
+    let theme: Theme
+    init(theme: Theme) {
+        self.theme = theme
+        self.model = MemoryGame(numberOfPairsOfCards: theme.emojis.count, cardContentFactory: { (idx) -> String in
+            theme.emojis[idx]
+        })
     }
 
     // MARK: - Access to the Model
@@ -32,6 +32,6 @@ class EmojiMemoryGame: ObservableObject {
     }
 
     func newGameTapped() {
-        model = EmojiMemoryGame.createMemoryGame()
+        model = MemoryGame(numberOfPairsOfCards: theme.emojis.count, cardContentFactory: { idx in self.theme.emojis[idx] } )
     }
 }
